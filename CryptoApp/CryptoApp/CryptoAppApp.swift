@@ -15,7 +15,6 @@ struct CryptoAppApp: App {
                 ContentView()
                     .toolbar(.hidden, for: .navigationBar)
             }
-
         }
     }
 }
