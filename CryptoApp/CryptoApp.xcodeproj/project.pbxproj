@@ -19,6 +19,7 @@
 		18C581232B9AF34600D2B5D6 /* CoinRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C581222B9AF34600D2B5D6 /* CoinRowView.swift */; };
 		18C581252B9AF42C00D2B5D6 /* PreviewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C581242B9AF42C00D2B5D6 /* PreviewProvider.swift */; };
 		18C581272B9B0D0500D2B5D6 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C581262B9B0D0500D2B5D6 /* Double.swift */; };
+		18C581292B9B27E900D2B5D6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C581282B9B27E900D2B5D6 /* HomeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		18C581222B9AF34600D2B5D6 /* CoinRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinRowView.swift; sourceTree = "<group>"; };
 		18C581242B9AF42C00D2B5D6 /* PreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProvider.swift; sourceTree = "<group>"; };
 		18C581262B9B0D0500D2B5D6 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		18C581282B9B27E900D2B5D6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 		18C581152B96F66D00D2B5D6 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				18C581282B9B27E900D2B5D6 /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18C581232B9AF34600D2B5D6 /* CoinRowView.swift in Sources */,
+				18C581292B9B27E900D2B5D6 /* HomeViewModel.swift in Sources */,
 				18C581252B9AF42C00D2B5D6 /* PreviewProvider.swift in Sources */,
 				18C581022B95F09400D2B5D6 /* ContentView.swift in Sources */,
 				18C581172B96F67A00D2B5D6 /* HomeView.swift in Sources */,

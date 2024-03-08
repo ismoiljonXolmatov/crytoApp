@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CoinRowView: View {
     let coin: CoinModel
-    let showHoldingColumn: Bool
+    @State var showHoldingColumn: Bool = true
     var body: some View {
         HStack(spacing: 0) {
             leftColumn
@@ -35,18 +35,18 @@ struct CoinRowView: View {
  
 extension CoinRowView {
     private var leftColumn: some View {
-        Text("\(coin.rank)")
-            .font(.caption)
-            .foregroundStyle(Color.theme.secondaryText)
-            .frame(minWidth: 30)
-        Circle()
-            .frame(maxWidth: 30, maxHeight: 30)
-            .padding(.leading, 6)
-            .foregroundStyle(Color.theme.accent)
-        return Text(coin.symbol.uppercased())
-            .font(.headline)
-            .padding(.leading, 6)
-            .foregroundStyle(Color.theme.accent)
+        HStack {
+            Text("\(coin.rank)")
+                .font(.caption)
+                .foregroundStyle(Color.theme.secondaryText)
+                .frame(minWidth: 30)
+            Circle()
+                .frame(maxWidth: 30, maxHeight: 30)
+            Text(coin.symbol.uppercased())
+                .font(.headline)
+                .padding(.leading, 6)
+                .foregroundStyle(Color.theme.accent)
+        }
     }
     
     private var centerCoulmn: some View {

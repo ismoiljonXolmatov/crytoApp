@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct HomeView: View {
-    
+    @EnvironmentObject var viewModel: HomeViewModel
     @State var showPortfolio: Bool = false
     var body: some View {
         ZStack {
             //background layer
-            Color.theme.background
-                .ignoresSafeArea()
+            Color.theme.background.ignoresSafeArea()
             // Content layer
             VStack {
                 homeHeaderView
+                coulmnTitles
+                 if !showPortfolio {
+                   allCoinsList
+                    .transition(.move(edge: .leading))
+                } else {
+                    portfolioList
+                        .transition(.move(edge: .trailing))
+                }
                 Spacer(minLength: 0)
             }
         }
@@ -29,6 +36,7 @@ struct HomeView: View {
         HomeView()
             .toolbar(.hidden, for: .navigationBar)
     }
+    .environmentObject(DeveloperPreview.instance.homeViewModel)
 }
 
 extension HomeView {
@@ -54,6 +62,41 @@ extension HomeView {
                 }
         }
         .padding(.horizontal)
-        
     }
+    
+    private var coulmnTitles: some View {
+        HStack {
+            Text("Coin")
+            Spacer()
+            if showPortfolio {
+                Text("Holdings")
+             }
+            Text("Price")
+                .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
+        }
+        .font(.caption)
+        .padding(.horizontal)
+        .foregroundStyle(Color.theme.secondaryText)
+    }
+    
+    private var allCoinsList: some View {
+        List {
+            ForEach(viewModel.allCoins) { coin in
+                CoinRowView(coin: coin, showHoldingColumn: false)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 10))
+            }
+        }
+        .listStyle(PlainListStyle())
+    }
+    
+    private var portfolioList: some View {
+        List {
+            ForEach(viewModel.portfolioCoins) { coin in
+                CoinRowView(coin: coin)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 10))
+            }
+        }
+        .listStyle(PlainListStyle())
+    }
+    
 }
