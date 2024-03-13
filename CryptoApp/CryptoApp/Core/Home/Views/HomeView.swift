@@ -17,6 +17,9 @@ struct HomeView: View {
             // Content layer
             VStack {
                 homeHeaderView
+                
+                SearchBarView(searchText: $viewModel.searchText)
+                
                 coulmnTitles
                  if !showPortfolio {
                    allCoinsList
@@ -29,14 +32,6 @@ struct HomeView: View {
             }
         }
     }
-}
-
-#Preview {
-    NavigationStack {
-        HomeView()
-            .toolbar(.hidden, for: .navigationBar)
-    }
-    .environmentObject(DeveloperPreview.instance.homeViewModel)
 }
 
 extension HomeView {
@@ -100,3 +95,14 @@ extension HomeView {
     }
     
 }
+
+
+/*
+ #Preview {
+     NavigationStack {
+         HomeView()
+             .toolbar(.hidden, for: .navigationBar)
+     }
+     .environmentObject(DeveloperPreview.instance.homeViewModel)
+ }
+ */
