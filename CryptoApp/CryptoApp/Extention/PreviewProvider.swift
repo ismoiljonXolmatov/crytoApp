@@ -17,6 +17,9 @@ extension PreviewProvider {
 class DeveloperPreview {
     static let instance = DeveloperPreview()
     private init () {}
+    let stat1 = StatisticModel(title: "Market Cup", value: "$12.5Bn", persentageChange: 12.65)
+    let stat2 = StatisticModel(title: "Total Volume", value: "$1.43Tr")
+    let stat3 = StatisticModel(title: "Weekly revenue", value: "$439.6k", persentageChange: -11.98)
     let homeViewModel = HomeViewModel()
     let coin = CoinModel(
         id: "bitcoin",
