@@ -34,6 +34,11 @@ struct PortfolioView: View {
                 }
             })
             .navigationTitle("Portfolio View")
+            .onChange(of: homeViewModel.searchText) { value in
+                if value == "" {
+                    removeSelectedCoin()
+                }
+            }
         }
     }
 }
@@ -43,7 +48,7 @@ extension PortfolioView {
     
     private var navBarTrailingButton: some View {
         HStack(spacing: 10) {
-           Image(systemName: "checkmark")
+            Image(systemName: "checkmark")
                 .opacity(showCheckmark ? 1 : 0)
             Button(action: {
                 saveCoin()
@@ -58,7 +63,7 @@ extension PortfolioView {
         .font(.headline)
     }
     
-   private var portFolioInputSection: some View {
+    private var portFolioInputSection: some View {
         VStack(spacing: 20) {
             HStack {
                 Text("Current price of \(selectedCoin?.symbol.uppercased() ?? ""): ")
@@ -85,21 +90,23 @@ extension PortfolioView {
         .font(.headline)
     }
     
-   private var coinLogoList: some View {
+    private var coinLogoList: some View {
         ScrollView(.horizontal, showsIndicators: false, content: {
             LazyHStack(content: {
-                ForEach(homeViewModel.allCoins) { coin in
-                  CoinLogoView(coin: coin)
+                ForEach(homeViewModel.searchText.isEmpty ? homeViewModel.portfolioCoins : homeViewModel.allCoins) { coin in
+                    CoinLogoView(coin: coin)
                         .frame(width: 75)
                         .padding(4)
                         .onTapGesture {
-                            withAnimation {selectedCoin = coin}
+                            withAnimation {
+                                updateSelectedCoin(coin: coin)
+                            }
                         }
                         .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(
-                                selectedCoin?.id == coin.id ? Color.theme.green : Color.clear,
-                                lineWidth: 1)
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(
+                                    selectedCoin?.id == coin.id ? Color.theme.green : Color.clear,
+                                    lineWidth: 1)
                         )
                 }
             })
@@ -115,11 +122,21 @@ extension PortfolioView {
         return 0
     }
     
+    private func updateSelectedCoin(coin: CoinModel) {
+        selectedCoin = coin
+        if let coin = homeViewModel.portfolioCoins.first(where: {$0.id == coin.id}),
+           let amount = coin.currentHoldings {
+            quentityText = String(amount)
+        } else {
+            quentityText = ""
+        }
+    }
+    
     private func saveCoin() {
-        
         guard let coin = selectedCoin else {return}
         
         //save to portfolio
+        homeViewModel.updatePortfolio(coin: coin, amount: Double(quentityText) ?? 0)
         
         withAnimation(.easeIn) {
             showCheckmark = true
@@ -127,9 +144,8 @@ extension PortfolioView {
         }
         
         // dismiss keyboard
-        
         UIApplication.shared.endEtiting()
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation(.easeIn) {
                 showCheckmark = false

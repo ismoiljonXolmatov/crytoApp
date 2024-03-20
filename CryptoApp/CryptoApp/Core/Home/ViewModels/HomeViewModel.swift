@@ -11,14 +11,15 @@ import Combine
 class HomeViewModel: ObservableObject {
     
     @Published var statistics: [StatisticModel] =  []
-    
     @Published var allCoins: [CoinModel] = []
     @Published var portfolioCoins: [CoinModel] = []
     @Published var searchText: String = ""
     
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
+    private let portfolioDataService = PortfolioDataService()
     private var cancellables = Set<AnyCancellable>()
+    
     init() {
         addSubscribers()
     }
@@ -49,8 +50,29 @@ class HomeViewModel: ObservableObject {
             })
             .store(in: &cancellables)
         
+        // updates portfolio
+        $allCoins
+            .combineLatest(portfolioDataService.$savedEntities)
+            .map { coinModels, savedEntities -> [CoinModel] in
+                coinModels.compactMap { coin in
+                    guard let entity = savedEntities.first(where: { $0.coinID == coin.id}) else {
+                        return nil
+                    }
+                    return coin.updateHoldings(amount: entity.holdingAmount)
+                }
+            }
+            .sink { [weak self] returnedCoins in
+                self?.portfolioCoins = returnedCoins
+            }
+            .store(in: &cancellables)
     }
     
+    func updatePortfolio(coin: CoinModel, amount: Double) {
+        portfolioDataService.updatePortfolio(coin: coin, amount: amount)
+    }
+    
+    
+// MARK: Private
     private func filterCoins(text: String, coins: [CoinModel]) -> [CoinModel] {
         guard !text.isEmpty else { return coins }
         let lowercasedText = text.lowercased()

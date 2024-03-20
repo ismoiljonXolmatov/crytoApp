@@ -13,7 +13,6 @@ struct HomeView: View {
     @State var showPortfolioView: Bool = false
     var body: some View {
         ZStack {
-            
             //background layer
             Color.theme.background.ignoresSafeArea()
                 .sheet(isPresented: $showPortfolioView) {
@@ -25,7 +24,6 @@ struct HomeView: View {
                 homeHeaderView
                 HomeStatsView(showPortfolio: $showPortfolio)
                 SearchBarView(searchText: $viewModel.searchText)
-                
                 coulmnTitles
                  if !showPortfolio {
                    allCoinsList
