@@ -11,6 +11,7 @@ struct HomeStatsView: View {
     
     @EnvironmentObject var viewModel: HomeViewModel
     @Binding var showPortfolio: Bool
+    
     var body: some View {
         HStack {
             ForEach(viewModel.statistics) { stat in
