@@ -9,8 +9,10 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var viewModel: HomeViewModel
+    
     @State var showPortfolio: Bool = false
     @State var showPortfolioView: Bool = false
+    
     var body: some View {
         ZStack {
             //background layer
@@ -77,6 +79,14 @@ extension HomeView {
              }
             Text("Price")
                 .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
+            Button(action: {
+                withAnimation(.linear(duration: 1.5)) {
+                    viewModel.reloadData()
+                }
+            }, label: {
+                Image(systemName: "goforward")
+            })
+            .rotationEffect(Angle(degrees: viewModel.isReloading ? 360 : 0), anchor: .center)
         }
         .font(.caption)
         .padding(.horizontal)

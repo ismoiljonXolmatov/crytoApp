@@ -33,7 +33,7 @@ struct PortfolioView: View {
                     navBarTrailingButton
                 }
             })
-            .navigationTitle("Portfolio View")
+            .navigationTitle("Edit Portfolio")
             .onChange(of: homeViewModel.searchText) { value in
                 if value == "" {
                     removeSelectedCoin()
@@ -106,8 +106,7 @@ extension PortfolioView {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(
                                     selectedCoin?.id == coin.id ? Color.theme.green : Color.clear,
-                                    lineWidth: 1)
-                        )
+                                    lineWidth: 1))
                 }
             })
             .frame(height: 120)

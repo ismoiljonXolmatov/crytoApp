@@ -31,8 +31,7 @@ struct StatisticView: View {
             }
             .foregroundStyle((stat.persentageChange ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
             .opacity(stat.persentageChange == nil ? 0 : 1)
-            
-        }
+         }
     }
 }
 
