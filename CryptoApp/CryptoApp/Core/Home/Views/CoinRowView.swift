@@ -19,6 +19,7 @@ struct CoinRowView: View {
             }
             rightCoulmn
         }
+        .background(Color.theme.background.opacity(0.001))
     }
 }
 
