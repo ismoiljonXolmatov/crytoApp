@@ -15,11 +15,16 @@ class HomeViewModel: ObservableObject {
     @Published var portfolioCoins: [CoinModel] = []
     @Published var searchText: String = ""
     @Published var isReloading: Bool = false
+    @Published var sortOption: SortOptions = .holdings
     
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
     private let portfolioDataService = PortfolioDataService()
     private var cancellables = Set<AnyCancellable>()
+    
+    enum SortOptions {
+        case rank, rankReversed, holdings, holdingsReversed, price, priceReversed
+    }
     
     init() {
         addSubscribers()
@@ -47,8 +52,8 @@ class HomeViewModel: ObservableObject {
         
         //updates based on search bar's search
         $searchText
-            .combineLatest(coinDataService.$allCoins)
-            .map(filterCoins)
+            .combineLatest(coinDataService.$allCoins, $sortOption)
+            .map(filterAndSortCoins)
             .sink { [weak self] returnedCoind in
                 self?.allCoins = returnedCoind
             }
@@ -60,6 +65,7 @@ class HomeViewModel: ObservableObject {
             .map(transferMarketDataToStatModel)
             .sink(receiveValue: { [weak self] statistics in
                 self?.statistics = statistics
+                self?.isReloading = false
             })
             .store(in: &cancellables)
         
@@ -68,10 +74,31 @@ class HomeViewModel: ObservableObject {
             .combineLatest(portfolioDataService.$savedEntities)
             .map(mapAllCoinsToPortfolioCoins)
             .sink { [weak self] returnedCoins in
-                self?.portfolioCoins = returnedCoins
-                self?.isReloading = false
+                guard let this = self else {return}
+                this.portfolioCoins = this .sortPortfolioCoinsIfNeeded(coins: returnedCoins)
             }
             .store(in: &cancellables)
+    }
+    
+    private func sortPortfolioCoinsIfNeeded(coins: [CoinModel]) -> [CoinModel] {
+        switch sortOption {
+        case .holdings:
+            return coins.sorted(by: {$0.currentHoldingsValue > $1.currentHoldingsValue})
+        case .holdingsReversed:
+            return coins.sorted(by: {$0.currentHoldingsValue < $1.currentHoldingsValue})
+            
+        default:
+            return coins
+        }
+    }
+    
+    private func filterAndSortCoins(text: String, coins: [CoinModel], sort: SortOptions) -> [CoinModel] {
+        //Filter
+        var updatedCoins = filterCoins(text: text, coins: coins)
+        //Sort
+        sortCoins(sort: sort, coins: &updatedCoins)
+        // Return Result
+        return updatedCoins
     }
     
     private func filterCoins(text: String, coins: [CoinModel]) -> [CoinModel] {
@@ -81,6 +108,19 @@ class HomeViewModel: ObservableObject {
             return coin.name.lowercased().contains(lowercasedText) ||
             coin.symbol.lowercased().contains(lowercasedText) ||
             coin.id.lowercased().contains(lowercasedText)
+        }
+    }
+    
+    private func sortCoins(sort: SortOptions, coins: inout [CoinModel]) {
+        switch sort {
+        case .rank, .holdings:
+            coins.sort(by: {$0.rank < $1.rank})
+        case .rankReversed, .holdingsReversed:
+            coins.sort(by: {$0.rank > $1.rank})
+        case .price:
+            coins.sort(by: {$0.currentPrice > $1.currentPrice})
+        case .priceReversed:
+            coins.sort(by: {$0.currentPrice < $1.currentPrice})
         }
     }
     
@@ -103,12 +143,12 @@ class HomeViewModel: ObservableObject {
             .map({$0.currentHoldingsValue})
             .reduce(0, +)
         let previousValue = portfolioCoins
-                .map { coin -> Double in
-                    let currentValue = coin.currentHoldingsValue
-                    let precentChange = coin.priceChangePercentage24H ?? 0 * 100
-                    return  currentValue / (1 + precentChange)
-                }
-                .reduce(0, +)
+            .map { coin -> Double in
+                let currentValue = coin.currentHoldingsValue
+                let precentChange = coin.priceChangePercentage24H ?? 0 * 100
+                return  currentValue / (1 + precentChange)
+            }
+            .reduce(0, +)
         let precentageChange = ((portfolioValue - previousValue) / previousValue)
         let portfolio = StatisticModel(
             title: "Portfoio Value",
