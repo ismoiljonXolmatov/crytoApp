@@ -40,7 +40,7 @@ struct HomeView: View {
             }
         }
         .navigationDestination(isPresented: $showDetailView) {
-            LoadinfCoinDetailView(coin: $selectedCoin)
+            LoadingCoinDetailView(coin: $selectedCoin)
         }
     }
     
