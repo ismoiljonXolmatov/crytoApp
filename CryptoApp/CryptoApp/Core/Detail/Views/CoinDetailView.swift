@@ -16,31 +16,37 @@ struct CoinDetailView: View {
         GridItem(.flexible())
     ]
     
-    
     init(coin: CoinModel) {
         _viewModel = StateObject(wrappedValue: CoinDetailViewModel(coin: coin))
     }
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                Text("")
-                    .frame(height: 250)
-                gridTitle("Overview")
-                Divider()
-                makeGrid(viewModel.overviewStatistics)
-                gridTitle("Additional Details")
-                Divider()
-                makeGrid(viewModel.additionalStatistics)
+            VStack {
+                ChartView(coin: viewModel.coin)
+                    .padding(.vertical)
+                VStack(alignment: .leading) {
+                    gridTitle("Overview")
+                    Divider()
+                    makeGrid(viewModel.overviewStatistics)
+                    gridTitle("Additional Details")
+                    Divider()
+                    makeGrid(viewModel.additionalStatistics)
+                }
+                .padding()
             }
-            .padding()
         }
         .navigationTitle(viewModel.coin.name)
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                navBarTrailingItems
+            }
+        })
     }
     
     private func gridTitle(_ title: String) -> some View {
         Text(title)
-            .font(.title)
+            .font(.title2)
             .bold()
             .foregroundStyle(Color.theme.accent)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -56,6 +62,18 @@ struct CoinDetailView: View {
                     StatisticView(stat: stat)
                 }
             })
+    }
+}
+
+extension CoinDetailView {
+    private var navBarTrailingItems: some View {
+        HStack {
+            Text(viewModel.coin.symbol.uppercased())
+                .font(.headline)
+                .foregroundStyle(Color.theme.secondaryText)
+            CoinImageView(coin: viewModel.coin)
+                .frame(width: 25, height: 25)
+        }
     }
 }
 
