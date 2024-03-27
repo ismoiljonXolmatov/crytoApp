@@ -95,7 +95,7 @@ extension ChartView {
         VStack {
             Text(maxY.formattedWithAbbreviations())
             Spacer()
-            Text((maxY + minY / 2).formattedWithAbbreviations())
+            Text(((maxY + minY) / 2).formattedWithAbbreviations())
             Spacer()
             Text(minY.formattedWithAbbreviations())
         }

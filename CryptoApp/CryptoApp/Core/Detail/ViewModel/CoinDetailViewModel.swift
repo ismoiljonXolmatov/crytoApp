@@ -13,7 +13,11 @@ class CoinDetailViewModel: ObservableObject {
     @Published var coinDetails: CoinDetailModel? = nil
     @Published var overviewStatistics: [StatisticModel] = []
     @Published var additionalStatistics: [StatisticModel] = []
+    @Published var description: String? = nil
+    @Published var websiteUrl: String? = nil
+    @Published var rettidUrl: String? = nil
     @Published var coin: CoinModel
+    
     private let coinDetailService: CoinDetaildataService
     private var cancellables = Set<AnyCancellable>()
     
@@ -24,12 +28,22 @@ class CoinDetailViewModel: ObservableObject {
     }
     
     private func addSubscribers() {
+        //subscribe Coin Detail Service's Coindetail Publisher
         coinDetailService.$coinDetails
             .combineLatest($coin)
             .map(mapCoinModelsIntoStatisticArray)
             .sink { [weak self] arrays in
                 self?.overviewStatistics = arrays.overiew
                 self?.additionalStatistics = arrays.additional
+            }
+            .store(in: &cancellables)
+        
+        // Subscribe Second Time
+        coinDetailService.$coinDetails
+            .sink {  [weak self] returnedDetails in
+                self?.description = returnedDetails?.readableDescription
+                self?.websiteUrl = returnedDetails?.links?.homepage?.first
+                self?.rettidUrl = returnedDetails?.links?.subredditURL
             }
             .store(in: &cancellables)
     }

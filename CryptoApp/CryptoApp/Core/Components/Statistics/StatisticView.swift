@@ -32,6 +32,12 @@ struct StatisticView: View {
             .foregroundStyle((stat.persentageChange ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
             .opacity(stat.persentageChange == nil ? 0 : 1)
          }
+        .padding()
+        .background(
+        RoundedRectangle(cornerRadius: 10)
+            .fill(Color.theme.background)
+            .shadow(color: .theme.secondaryText.opacity(0.3), radius: 10)
+        )
     }
 }
 
