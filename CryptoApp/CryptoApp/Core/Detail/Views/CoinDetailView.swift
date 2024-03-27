@@ -126,7 +126,7 @@ extension CoinDetailView {
                 })
             }
             
-            if let websiteUrlString = viewModel.websiteUrl,
+            if let websiteUrlString = viewModel.rettidUrl,
                let url = URL(string: websiteUrlString) {
                 Link(destination: url, label: {
                     HStack {
