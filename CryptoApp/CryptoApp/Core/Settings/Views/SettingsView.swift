@@ -121,7 +121,6 @@ extension SettingsView {
             Link("Learn More", destination: viewModel.googleUrl!)
          }
     }
-
 }
 
 #Preview {
