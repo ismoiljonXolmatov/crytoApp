@@ -30,12 +30,18 @@ struct HomeView: View {
                 HomeStatsView(showPortfolio: $showPortfolio)
                 SearchBarView(searchText: $viewModel.searchText)
                 coulmnTitles
-                 if !showPortfolio {
-                   allCoinsList
-                    .transition(.move(edge: .leading))
+                if !showPortfolio {
+                    allCoinsList
+                        .transition(.move(edge: .leading))
                 } else {
-                    portfolioList
-                        .transition(.move(edge: .trailing))
+                    ZStack(alignment: .top) {
+                        if viewModel.portfolioCoins.isEmpty && viewModel.searchText.isEmpty {
+                          portfolioListEmptyText
+                        } else {
+                            portfolioList
+                        }
+                    }
+                    .transition(.move(edge: .trailing))
                 }
                 Spacer(minLength: 0)
             }
@@ -49,7 +55,7 @@ struct HomeView: View {
     }
     
     private func segue(coin: CoinModel) {
-       selectedCoin = coin
+        selectedCoin = coin
         showDetailView.toggle()
     }
 }
@@ -70,7 +76,7 @@ extension HomeView {
                     }
                 }
             Spacer()
-            Text("Header")
+            Text(showPortfolio ? "Portfolio" : "Live Prices")
                 .font(.headline)
                 .fontWeight(.heavy)
                 .foregroundStyle(Color.theme.accent)
@@ -112,7 +118,7 @@ extension HomeView {
                         viewModel.sortOption = viewModel.sortOption == .holdings ? .holdingsReversed : .holdings
                     }
                 }
-             }
+            }
             HStack(spacing: 4) {
                 Text("Price")
                 Image(systemName: "chevron.down")
@@ -165,15 +171,24 @@ extension HomeView {
         .listStyle(PlainListStyle())
     }
     
+    private var portfolioListEmptyText: some View {
+        Text("You havn't added any coins to your portfolio yet. Click + button to get started! 🧐")
+            .multilineTextAlignment(.center)
+            .font(.callout)
+            .fontWeight(.medium)
+            .foregroundStyle(Color.theme.accent)
+            .padding(50)
+    }
+    
 }
 
 
 /*
  #Preview {
-     NavigationStack {
-         HomeView()
-             .toolbar(.hidden, for: .navigationBar)
-     }
-     .environmentObject(DeveloperPreview.instance.homeViewModel)
+ NavigationStack {
+ HomeView()
+ .toolbar(.hidden, for: .navigationBar)
+ }
+ .environmentObject(DeveloperPreview.instance.homeViewModel)
  }
  */
