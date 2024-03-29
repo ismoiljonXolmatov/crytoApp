@@ -13,19 +13,29 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                coinGeckoSection
-                developerSection
-                swiftfullThinkingSection
-                applicationSection
-            }
-            .listStyle(.automatic)
-            .tint(.blue)
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    XMarkButton()
+            ZStack {
+                //background
+                Color.theme.background.ignoresSafeArea()
+                
+                //content
+                List {
+                    coinGeckoSection
+                        .listRowBackground(Color.theme.background.opacity(0.2))
+                    developerSection
+                        .listRowBackground(Color.theme.background.opacity(0.2))
+                    swiftfullThinkingSection
+                        .listRowBackground(Color.theme.background.opacity(0.2))
+                    applicationSection
+                        .listRowBackground(Color.theme.background.opacity(0.2))
                 }
-            })
+                .listStyle(.automatic)
+                .tint(.blue)
+                .toolbar(content: {
+                    ToolbarItem(placement: .topBarLeading) {
+                        XMarkButton()
+                    }
+                })
+            }
         }
     }
 }

@@ -47,6 +47,7 @@ struct CoinDetailView: View {
                 }
             }
         }
+        .background(Color.theme.background)
         .navigationTitle(viewModel.coin.name)
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
